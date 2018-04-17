@@ -1,8 +1,9 @@
+/* eslint no-param-reassign: 0 */
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import axios from 'axios';
 import _ from 'lodash';
+import moment from 'moment';
 
 import athleteStore from './assets/athletes.json';
 
@@ -47,7 +48,7 @@ const store = new Vuex.Store({
 
   getters: {
     rosterLoaded(state) {
-      return state.roster && state.roster.hasOwnProperty('data');
+      return state.roster && Object.prototype.hasOwnProperty.call(state.roster, 'data');
     },
 
     roster(state) {
@@ -69,7 +70,8 @@ const store = new Vuex.Store({
     filteredData(state) {
       const allFilters = _.values(state.filters);
 
-      return state.roster.data.map((athlete) => {
+      return state.roster.data.map((data) => {
+        const athlete = data;
         athlete.visible = allFilters.every(filter => filter(athlete));
 
         return athlete;
@@ -89,9 +91,7 @@ const store = new Vuex.Store({
     },
 
     async save(context, payload) {
-      const save = await axios.put(`/api/athletes/${payload.id}`, payload);
       context.commit('updateAthlete', payload);
-      return save;
     },
 
     checkAll(context, payload) {
@@ -159,6 +159,15 @@ const store = new Vuex.Store({
         Vue.set(state.filters, key, reducer);
       }
     },
+
+    addAthlete(state, payload) {
+      const athlete = payload;
+
+      athlete.visible = true;
+      athlete.checked = true;
+      athlete.competitive_age = moment().endOf('year').diff(moment(athlete.birthdate, 'YYYY-MM-DD'), 'years');
+      state.roster.data.push(athlete);
+    },
   },
 
   modules: {
@@ -190,21 +199,17 @@ const store = new Vuex.Store({
         },
       },
       actions: {
-        updateFormField(context, payload) {
-          context.commit('setFormField', payload);
+        updateFormField({ commit }, payload) {
+          commit('setFormField', payload);
         },
 
-        addAthlete(context) {
-          context.commit('submitForm');
+        addAthlete({ commit, getters }) {
+          commit('addAthlete', getters.form, { root: true });
         },
       },
       mutations: {
         setFormField(state, { field, value }) {
           Vue.set(state.form, field, value);
-        },
-
-        async submitForm(state) {
-          return axios.post('/api/athletes', state.form);
         },
       },
     },

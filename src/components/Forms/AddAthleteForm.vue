@@ -165,7 +165,7 @@ export default {
     },
 
     allLevels() {
-      const { allLevels } = this.$store.getters;
+      const allLevels = Object.assign({}, this.$store.getters.allLevels); // Need to get copy...?
 
       allLevels.map((level) => {
         const refactoredLevel = level;

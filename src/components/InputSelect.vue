@@ -7,8 +7,8 @@
                 {{ option.value }}
             </option>
         </select>
-        <button type="button" class="btn btn-default" @click="save" v-show="editing">✔️</button>
-        <button type="button" class="btn btn-default" @click="cancel" v-show="editing">✖️</button>
+        <button type="button" class="btn btn-default" @click="save" v-show="editing">✔</button>
+        <button type="button" class="btn btn-default" @click="cancel" v-show="editing">✖</button>
         <span @click="toggleEditing" v-show="!editing" v-if="changeableData">{{ display }}</span>
     </div>
 </template>
@@ -29,9 +29,9 @@ export default {
 
   computed: {
     display() {
-      const selected = this.options.filter(option => option.key === String(this.changeableData));
+      const selected = this.options.find(option => option.key === String(this.changeableData));
 
-      return (selected.length) ? selected[0].value : '';
+      return selected ? selected.value : '';
     },
   },
 

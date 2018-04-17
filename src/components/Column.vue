@@ -55,6 +55,7 @@ export default {
       if (key === 'tra_level' || key === 'dmt_level' || key === 'tum_level') {
         return options.level;
       }
+
       return options[key];
     },
 
