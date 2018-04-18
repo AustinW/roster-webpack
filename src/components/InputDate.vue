@@ -45,7 +45,7 @@ export default {
   computed: {
     formattedDate() {
       if (this.temporaryData) {
-        const momentDate = moment(this.temporaryData).format('M/D/YYYY');
+        const momentDate = moment(this.temporaryData, ['MM/DD/YYYY']).format('M/D/YYYY');
         return (momentDate) || '';
       }
       return this.temporaryData;

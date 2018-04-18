@@ -165,22 +165,18 @@ export default {
     },
 
     allLevels() {
-      const allLevels = Object.assign({}, this.$store.getters.allLevels); // Need to get copy...?
+      const { allLevels } = this.$store.getters;
 
-      allLevels.map((level) => {
-        const refactoredLevel = level;
+      const reindexed = [];
 
-        Object.defineProperty(refactoredLevel, 'text', Object.getOwnPropertyDescriptor(refactoredLevel, 'value'));
-        delete refactoredLevel.value;
-
-        Object.defineProperty(refactoredLevel, 'value', Object.getOwnPropertyDescriptor(refactoredLevel, 'key'));
-        delete refactoredLevel.key;
-
-        return refactoredLevel;
+      allLevels.forEach((level) => {
+        reindexed.push({
+          text: level.value,
+          value: level.key,
+        });
       });
 
-
-      return allLevels;
+      return reindexed;
     },
   },
 

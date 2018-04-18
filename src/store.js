@@ -163,9 +163,13 @@ const store = new Vuex.Store({
     addAthlete(state, payload) {
       const athlete = payload;
 
+      const momentBirthdate = moment(athlete.birthdate, 'MM/DD/YYYY');
+
+      athlete.active = '1';
       athlete.visible = true;
       athlete.checked = true;
-      athlete.competitive_age = moment().endOf('year').diff(moment(athlete.birthdate, 'YYYY-MM-DD'), 'years');
+      athlete.birthdate = momentBirthdate.format('YYYY-MM-DD 00:00:00');
+      athlete.competitive_age = moment().endOf('year').diff(momentBirthdate, 'years');
       state.roster.data.push(athlete);
     },
   },
