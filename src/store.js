@@ -4,12 +4,23 @@ import Vuex from 'vuex';
 
 import _ from 'lodash';
 import moment from 'moment';
+import createPersistedState from 'vuex-persistedstate';
 
 import athleteStore from './assets/athletes.json';
 
 Vue.use(Vuex);
 
+const competitiveAge = (date) => {
+  if (!moment.isMoment(date)) {
+    date = moment(date, ['MM/DD/YYYY', 'YYYY-MM-DD HH:mm:ss']);
+  }
+
+  return moment().endOf('year').diff(date, 'years');
+};
+
 const store = new Vuex.Store({
+  plugins: [createPersistedState()],
+
   state: {
     roster: null,
 
@@ -122,7 +133,11 @@ const store = new Vuex.Store({
     updateAthlete(state, payload) {
       state.roster.data = state.roster.data.map((athlete) => {
         if (athlete.id === payload.id) {
-          athlete[payload.field] = payload.value;
+          if (payload.field === 'birthdate') {
+            athlete.competitive_age = competitiveAge(payload.value);
+          } else {
+            athlete[payload.field] = payload.value;
+          }
         }
 
         return athlete;
@@ -169,7 +184,7 @@ const store = new Vuex.Store({
       athlete.visible = true;
       athlete.checked = true;
       athlete.birthdate = momentBirthdate.format('YYYY-MM-DD 00:00:00');
-      athlete.competitive_age = moment().endOf('year').diff(momentBirthdate, 'years');
+      athlete.competitive_age = competitiveAge(momentBirthdate);
       state.roster.data.push(athlete);
     },
   },
@@ -209,11 +224,17 @@ const store = new Vuex.Store({
 
         addAthlete({ commit, getters }) {
           commit('addAthlete', getters.form, { root: true });
+          commit('resetForm');
         },
       },
       mutations: {
         setFormField(state, { field, value }) {
           Vue.set(state.form, field, value);
+        },
+        resetForm(state) {
+          Object.keys(state.form).forEach((formKey) => {
+            state.form[formKey] = null;
+          });
         },
       },
     },

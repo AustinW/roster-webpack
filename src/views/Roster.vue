@@ -116,7 +116,11 @@ export default {
   },
 
   mounted() {
-    this.$store.dispatch('loadRoster', { table: this.$refs.vuetable });
+    const vuexLocal = localStorage.getItem('vuex');
+
+    if (!vuexLocal) {
+      this.$store.dispatch('loadRoster', { table: this.$refs.vuetable });
+    }
   },
 
   components: { Athlete, FilterBar },

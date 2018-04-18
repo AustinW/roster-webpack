@@ -19,6 +19,7 @@ import 'flatpickr/dist/flatpickr.css';
 import moment from 'moment';
 
 import BackendMixin from '../backend-mixin';
+import { competitiveAge } from '../store';
 
 export default {
   name: 'input-date',
@@ -59,6 +60,22 @@ export default {
   },
 
   methods: {
+    save() {
+      this.$store.dispatch('save', {
+        id: this.id,
+        field: this.field,
+        value: moment(this.temporaryData, ['MM/DD/YYYY']).format('YYYY-MM-DD HH:mm:ss'),
+      });
+
+      this.$store.dispatch('save', {
+        id: this.id,
+        field: 'competitive_age',
+        value: competitiveAge(this.temporaryData),
+      });
+
+      this.editing = false;
+    },
+
     cancel() {
       this.initDate(this.initialData);
       this.editing = false;
