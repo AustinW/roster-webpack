@@ -17,10 +17,13 @@
     "hsy-vue-dropdown": "^0.0.5",
     "lodash": "^4.17.4",
     "moment": "^2.22.0",
+    "papaparse": "^4.3.7",
     "register-service-worker": "^1.0.0",
+    "string-similarity": "^1.2.0",
     "vue": "^2.5.13",
     "vue-flatpickr-component": "^7.0.0",
     "vue-router": "^3.0.1",
+    "vue-sweetalert2": "^1.2.4",
     "vuetable-2": "^1.7.5",
     "vuex": "^3.0.1",
     "vuex-persistedstate": "^2.5.2"

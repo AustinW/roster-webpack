@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="margin-top:3.5rem">
         <div class="table-responsive">
             <table v-if="roster" class="table table-striped">
                 <thead>

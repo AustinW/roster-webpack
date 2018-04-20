@@ -97,14 +97,6 @@ export default {
   },
 
   methods: {
-    onSubmit() {
-      console.log('hullo');
-    },
-
-    onReset() {
-
-    },
-
     formGetter(field) {
       return this.$store.getters['AddAthleteForm/form'][field];
     },

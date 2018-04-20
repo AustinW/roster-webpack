@@ -1,5 +1,5 @@
 <template>
-    <b-navbar toggleable="md" type="light" variant="light">
+    <b-navbar toggleable="md" type="light" variant="light" class="fixed-top">
 
         <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
@@ -9,8 +9,8 @@
 
             <b-navbar-nav>
                 <b-nav-item v-b-modal.addAthlete>Add Athlete</b-nav-item>
-                <b-nav-item v-b-modal.importAthletes>Import Athletes</b-nav-item>
-                <b-nav-item v-b-modal.deleteAthletes>Delete Athletes</b-nav-item>
+                <b-nav-item v-b-modal.import>Import Athletes</b-nav-item>
+                <b-nav-item @click="removeCheckedAthletes">Delete Athletes</b-nav-item>
             </b-navbar-nav>
 
             <!-- Right aligned nav items -->
@@ -34,12 +34,14 @@
         </b-collapse>
 
         <add-athlete-modal></add-athlete-modal>
+        <import-modal></import-modal>
     </b-navbar>
 </template>
 
 <script>
-
+import { mapActions } from 'vuex';
 import AddAthleteModal from './Modals/AddAthleteModal.vue';
+import ImportModal from './Modals/ImportModal.vue';
 
 export default {
   data() {
@@ -54,8 +56,10 @@ export default {
 
   computed: {},
 
-  methods: {},
+  methods: {
+    ...mapActions(['removeCheckedAthletes']),
+  },
 
-  components: { AddAthleteModal },
+  components: { AddAthleteModal, ImportModal },
 };
 </script>

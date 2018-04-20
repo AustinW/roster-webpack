@@ -95,27 +95,43 @@ const store = new Vuex.Store({
   },
 
   actions: {
-    async loadRoster(context) {
+    async loadRoster({ commit }) {
       const roster = await Promise.resolve(athleteStore);
       console.log(roster);
-      context.commit('hydrateRoster', roster);
+      commit('hydrateRoster', roster);
     },
 
-    async save(context, payload) {
-      context.commit('updateAthlete', payload);
+    save({ commit }, payload) {
+      commit('updateAthlete', payload);
     },
 
-    checkAll(context, payload) {
-      context.commit('checkAll', payload);
-      context.commit('checkAllBoxes', payload);
+    removeCheckedAthletes(context) {
+      Vue.swal({
+        title: 'Are you sure?',
+        text: 'These athletes will be removed from your roster permanently.',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+      })
+        .then((willRemove) => {
+          if (willRemove.value) {
+            context.commit('removeAthletes', context.getters.selectedAthletes);
+          }
+        });
     },
 
-    removeFilter(context, key) {
-      context.commit('setFilter', { key });
+    checkAll({ commit }, payload) {
+      commit('checkAll', payload);
+      commit('checkAllBoxes', payload);
     },
 
-    addFilter(context, payload) {
-      context.commit('setFilter', payload);
+    removeFilter({ commit }, key) {
+      commit('setFilter', { key });
+    },
+
+    addFilter({ commit }, payload) {
+      commit('setFilter', payload);
     },
   },
 
@@ -142,6 +158,19 @@ const store = new Vuex.Store({
 
         return athlete;
       });
+    },
+
+    removeAthletes(state, payload) {
+      let removing;
+      if (Array.isArray(payload)) {
+        removing = payload.map(athlete => (Number.isInteger(athlete) ? athlete : athlete.id));
+      } else if (typeof payload === 'object') {
+        removing = [payload.id];
+      } else {
+        removing = [payload];
+      }
+
+      state.roster.data = state.roster.data.filter(athlete => !removing.includes(athlete.id));
     },
 
     checkAthlete(state, { athleteId, checked }) {
@@ -238,7 +267,29 @@ const store = new Vuex.Store({
         },
       },
     },
+
+    ImportForm: {
+      namespaced: true,
+
+      state: {
+        form: {
+          importer: null,
+          clear: null,
+        },
+      },
+      getters: {},
+      actions: {
+        import({ commit }) {
+          commit('importAthletes');
+        },
+      },
+      mutations: {
+        importAthletes(state) {
+          console.log(state);
+        },
+      },
+    },
   },
 });
 
-export default store;
+export { store, competitiveAge };
