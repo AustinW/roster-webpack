@@ -22,20 +22,21 @@
             <div v-if="fileLoaded">
                 <div class="mt-3 mb-3"><strong>Header Assignment (?)</strong></div>
                 <b-form-row v-for="header in headers" :key="header">
-                    <div class="col-md-3">
-                        <b-form-checkbox v-model="form[header].import" id="clear">
-                            {{ header }}
+                    <div class="col-md-4">
+                        <b-form-checkbox v-model="form[header].import">
+                            {{ capitalize(header) }}
                         </b-form-checkbox>
                     </div>
 
 
-                    <b-form-group class="col-md-6">
-                        <b-form-input
-                                id="first_name"
+                    <b-form-group class="col-md-8">
+                        <b-form-select
+                                :id="header"
                                 v-model="form[header].csvField"
+                                :options="csvHeaders"
                                 required
-                                placeholder="First Name">
-                        </b-form-input>
+                                :placeholder="capitalize(header)">
+                        </b-form-select>
                     </b-form-group>
                 </b-form-row>
             </div>
@@ -46,6 +47,7 @@
 <script>
 
 import Papa from 'papaparse';
+import Case from 'case';
 import GuessHeaders from '../../GuessHeaders';
 
 export default {
@@ -58,6 +60,8 @@ export default {
       fileLoaded: null,
       guessedHeaders: null,
       headers: null,
+      csvHeaders: null,
+      parser: null,
       form: null,
     };
   },
@@ -76,15 +80,17 @@ export default {
         Papa.parse(fileLoadedEvent.target.result, {
           header: true,
           complete(parser) {
+            that.parser = parser;
             const guessHeaders = new GuessHeaders(parser);
             const guessedHeaders = guessHeaders.guess();
             that.headers = Object.keys(guessHeaders.fieldMap);
+            that.csvHeaders = parser.meta.fields;
 
             that.headers.forEach((header) => {
               const headerMapped = (Object.prototype.hasOwnProperty.call(guessedHeaders, header));
               that.form[header] = {};
-              that.form[header].csvField =
-                (headerMapped) ? guessedHeaders[header] : '';
+              that.form[header].csvField = (headerMapped) ? guessedHeaders[header] : '';
+              that.form[header].import = true;
             });
 
             that.fileLoaded = true;
@@ -98,11 +104,21 @@ export default {
     handleOk(event) {
       event.preventDefault();
 
-      this.$store.dispatch('ImportForm/import').then(() => {
-        this.$refs.modal.hide();
-      }).catch((response) => {
-        console.error(response);
+      const athletes = [];
+
+      this.parser.data.forEach((athleteData) => {
+        const athlete = {};
+
+        Object.keys(this.form).forEach((key) => {
+          athlete[key] = athleteData[this.form[key].csvField];
+        });
+
+        athletes.push(athlete);
       });
+
+      console.log(athletes);
+
+
     },
 
     formGetter(field) {
@@ -111,6 +127,18 @@ export default {
 
     formSetter(field, value) {
       this.$store.dispatch('ImportForm/updateFormField', { field, value });
+    },
+
+    capitalize(str) {
+      const custom = {
+        tra_level: 'Trampoline',
+        dmt_level: 'Double Mini',
+        tum_level: 'Tumbling',
+      };
+
+      return (Object.prototype.hasOwnProperty.call(custom, str))
+        ? custom[str]
+        : Case.capital(str);
     },
   },
 };
