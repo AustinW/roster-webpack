@@ -2,19 +2,11 @@
   <div id="app">
     <navbar></navbar>
     <router-view/>
-    <div class="row">
-      <registration-autofill></registration-autofill>
-    </div>
-    <div class="row">
-      <level-autofill></level-autofill>
-    </div>
   </div>
 </template>
 
 <script>
 import Roster from './views/Roster.vue';
-import RegistrationAutofill from './components/RegistrationAutofill.vue';
-import LevelAutofill from './components/LevelAutofill.vue';
 import Navbar from './components/Navbar.vue';
 
 export default {
@@ -25,7 +17,7 @@ export default {
   },
 
   components: {
-    Roster, RegistrationAutofill, LevelAutofill, Navbar,
+    Roster, Navbar,
   },
 };
 </script>
@@ -33,6 +25,15 @@ export default {
 <style lang="scss">
 @import '../node_modules/bootstrap/scss/bootstrap';
 @import '~bootstrap-vue/dist/bootstrap-vue.min.css';
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-size: 14px;
+  color: #444;
+}
 
 .navbar-laravel {
   background-color: #fff;
@@ -44,10 +45,5 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-}
-
-body {
-  font-size: 14px;
-  color: #444;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div style="margin-top:3.5rem">
+    <div class="roster-container">
         <div class="table-responsive">
             <table v-if="roster" class="table table-striped">
                 <thead>
@@ -28,11 +28,20 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="row">
+            <registration-autofill></registration-autofill>
+        </div>
+        <div class="row">
+            <level-autofill></level-autofill>
+        </div>
     </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import RegistrationAutofill from '../components/RegistrationAutofill.vue';
+import LevelAutofill from '../components/LevelAutofill.vue';
 import Athlete from '../components/Athlete.vue';
 import FilterBar from '../components/Filters/FilterBar.vue';
 
@@ -123,11 +132,20 @@ export default {
     }
   },
 
-  components: { Athlete, FilterBar },
+  components: {
+    Athlete,
+    FilterBar,
+    RegistrationAutofill,
+    LevelAutofill,
+  },
 };
 </script>
 
 <style scoped>
+html, body {
+    height: auto;
+}
+
 table {
     border: 2px solid #42b983;
     border-radius: 3px;
@@ -183,5 +201,9 @@ th.active .arrow {
 
 .column-controls .fa-sort {
     opacity: 0.4;
+}
+
+.roster-container {
+    margin-top:3.5rem;
 }
 </style>

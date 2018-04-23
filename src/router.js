@@ -2,6 +2,9 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Roster from './views/Roster.vue';
 
+import Login from './views/Login.vue';
+import Register from './views/Register.vue';
+
 Vue.use(Router);
 
 export default new Router({
@@ -24,6 +27,18 @@ export default new Router({
           'tum_level',
         ],
       },
+    },
+
+    {
+      path: '/login',
+      name: 'Login',
+      component: Login,
+    },
+
+    {
+      path: '/register',
+      name: 'Register',
+      component: Register,
     },
   ],
 });
