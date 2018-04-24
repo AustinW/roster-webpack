@@ -49,7 +49,6 @@ export default {
   name: 'roster',
 
   props: {
-    columns: Array,
     filterKey: String,
   },
 
@@ -114,13 +113,27 @@ export default {
   data() {
     const sortOrders = {};
 
-    this.columns.forEach((key) => {
+    const columns = [
+      'active',
+      'usag_id',
+      'first_name',
+      'last_name',
+      'gender',
+      'birthdate',
+      'age',
+      'tra_level',
+      'dmt_level',
+      'tum_level',
+    ];
+
+    columns.forEach((key) => {
       sortOrders[key] = 1;
     });
 
     return {
       sortKey: '',
       sortOrders,
+      columns,
     };
   },
 

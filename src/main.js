@@ -18,11 +18,12 @@ const config = {
 };
 
 firebase.initializeApp(config);
+firebase.auth().onAuthStateChanged(() => {
+  new Vue({
+    router,
+    store,
+    render: h => h(App),
+  }).$mount('#app');
+});
 
 require('./plugins');
-
-new Vue({
-  router,
-  store,
-  render: h => h(App),
-}).$mount('#app');

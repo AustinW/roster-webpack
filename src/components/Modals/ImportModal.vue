@@ -117,8 +117,6 @@ export default {
       });
 
       console.log(athletes);
-
-
     },
 
     formGetter(field) {

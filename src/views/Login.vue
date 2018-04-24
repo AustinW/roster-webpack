@@ -1,31 +1,59 @@
 <template>
-    <form class="form-login mt-4 text-center">
+    <form class="form-login text-center">
         <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
         <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
         <label for="email" class="sr-only">Email address</label>
-        <input type="email" id="email" class="form-control" placeholder="Email" required autofocus>
+        <input
+            type="email"
+            id="email"
+            v-model="email"
+            class="form-control"
+            placeholder="Email" required autofocus>
         <label for="password" class="sr-only">Password</label>
-        <input type="password" id="password" class="form-control" placeholder="Password" required>
+        <input
+            type="password"
+            id="password"
+            v-model="password"
+            class="form-control"
+            placeholder="Password" required>
         <div class="checkbox mb-3">
             <label>
                 <input type="checkbox" value="remember-me"> Remember me
             </label>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit" @click="login">Login</button>
+        <button
+            class="btn btn-lg btn-primary btn-block"
+            type="submit"
+            @click.prevent="login">
+            Login
+        </button>
         <p class="mt-3">
-            Don't have an account? You can <router-link to="register">create one</router-link>.
+            Don't have an account? You can <router-link to="/register">create one</router-link>.
         </p>
         <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
     </form>
 </template>
 
 <script>
+import firebase from 'firebase';
+
 export default {
   name: 'login',
 
+  data() {
+    return {
+      email: '',
+      password: '',
+    };
+  },
+
   methods: {
     login() {
-      this.$router.replace('roster');
+      console.log(this.email, this.password);
+      firebase.auth().signInWithEmailAndPassword(this.email, this.password).then((user) => {
+        console.log(user);
+        alert('user signed in successfully!');
+      });
     },
   },
 };
@@ -53,7 +81,7 @@ body {
     width: 100%;
     max-width: 330px;
     padding: 15px;
-    margin: 0 auto;
+    margin: 200px auto 0 auto;
 }
 .form-login .checkbox {
     font-weight: 400;
