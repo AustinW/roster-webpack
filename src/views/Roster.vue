@@ -1,5 +1,5 @@
 <template>
-    <div style="margin-top:3.5rem">
+    <div class="roster-container">
         <div class="table-responsive">
             <table v-if="roster" class="table table-striped">
                 <thead>
@@ -28,11 +28,20 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="row">
+            <registration-autofill></registration-autofill>
+        </div>
+        <div class="row">
+            <level-autofill></level-autofill>
+        </div>
     </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import RegistrationAutofill from '../components/RegistrationAutofill.vue';
+import LevelAutofill from '../components/LevelAutofill.vue';
 import Athlete from '../components/Athlete.vue';
 import FilterBar from '../components/Filters/FilterBar.vue';
 
@@ -40,7 +49,6 @@ export default {
   name: 'roster',
 
   props: {
-    columns: Array,
     filterKey: String,
   },
 
@@ -105,13 +113,27 @@ export default {
   data() {
     const sortOrders = {};
 
-    this.columns.forEach((key) => {
+    const columns = [
+      'active',
+      'usag_id',
+      'first_name',
+      'last_name',
+      'gender',
+      'birthdate',
+      'age',
+      'tra_level',
+      'dmt_level',
+      'tum_level',
+    ];
+
+    columns.forEach((key) => {
       sortOrders[key] = 1;
     });
 
     return {
       sortKey: '',
       sortOrders,
+      columns,
     };
   },
 
@@ -123,11 +145,20 @@ export default {
     }
   },
 
-  components: { Athlete, FilterBar },
+  components: {
+    Athlete,
+    FilterBar,
+    RegistrationAutofill,
+    LevelAutofill,
+  },
 };
 </script>
 
 <style scoped>
+html, body {
+    height: auto;
+}
+
 table {
     border: 2px solid #42b983;
     border-radius: 3px;
@@ -183,5 +214,9 @@ th.active .arrow {
 
 .column-controls .fa-sort {
     opacity: 0.4;
+}
+
+.roster-container {
+    margin-top:3.5rem;
 }
 </style>
