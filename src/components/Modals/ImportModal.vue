@@ -48,6 +48,7 @@
 
 import Papa from 'papaparse';
 import Case from 'case';
+import moment from 'moment';
 import GuessHeaders from '../../GuessHeaders';
 
 export default {
@@ -111,6 +112,18 @@ export default {
 
         Object.keys(this.form).forEach((key) => {
           athlete[key] = athleteData[this.form[key].csvField];
+
+          if (key === 'birthdate') {
+            athlete[key] = moment(athlete[key]).format('YYYY-MM-DD 00:00:00');
+          }
+
+          if (key.includes('level')) {
+            const guessedLevel = this.guessLevel(athlete[key]);
+
+            if (guessedLevel) {
+              athlete[key] = guessedLevel.key;
+            }
+          }
         });
 
         athletes.push(athlete);
@@ -118,7 +131,13 @@ export default {
 
       console.log(athletes);
 
+      this.$store.dispatch('importAthletes', { athletes, clear: this.clear } );
+    },
 
+    guessLevel(levelStr) {
+      return this.$store.getters.fieldOptions.level.find((level) => {
+        return level.value === levelStr || level.key === levelStr;
+      });
     },
 
     formGetter(field) {

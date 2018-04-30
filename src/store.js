@@ -133,6 +133,14 @@ const store = new Vuex.Store({
     addFilter({ commit }, payload) {
       commit('setFilter', payload);
     },
+
+    importAthletes({ commit }, { athletes, clear }) {
+      if (clear) {
+        commit('eraseRoster');
+      }
+
+      commit('hydrateRoster', { data: athletes });
+    },
   },
 
   mutations: {
@@ -215,6 +223,10 @@ const store = new Vuex.Store({
       athlete.birthdate = momentBirthdate.format('YYYY-MM-DD 00:00:00');
       athlete.competitive_age = competitiveAge(momentBirthdate);
       state.roster.data.push(athlete);
+    },
+
+    eraseRoster(state) {
+      Vue.set(state.roster, 'data', []);
     },
   },
 
