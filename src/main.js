@@ -8,16 +8,16 @@ import './registerServiceWorker';
 
 Vue.config.productionTip = false;
 
-const config = {
+// Initialize Firebase
+firebase.initializeApp({
   apiKey: 'AIzaSyBJyceqmdMLQPv6Qlok49o5QeHJrd-NIb0',
   authDomain: 'roster-198418.firebaseapp.com',
   databaseURL: 'https://roster-198418.firebaseio.com',
   projectId: 'roster-198418',
-  storageBucket: '',
+  storageBucket: 'roster-198418.appspot.com',
   messagingSenderId: '804043831823',
-};
+});
 
-firebase.initializeApp(config);
 firebase.auth().onAuthStateChanged(() => {
   new Vue({
     router,
